@@ -1,0 +1,7 @@
+__pycache__
+weights/
+venv
+voice_database/*
+!voice_database/unknow/*
+gmm_models/*
+gmm_models/unknow.gmm
