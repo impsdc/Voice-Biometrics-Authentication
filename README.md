@@ -6,7 +6,7 @@ Voice Biometrics Authentication using GMM
 
 ## How to Run :
 
-**Create virtualenv** `python3 -m venv venv && . venv/bin/activate`<br>
+**Create virtualenv** `python3 -m venv venv && source venv/bin/activate`<br>
 **Install dependencies by running** `pip3 install -r requirement.txt`<br>
 
 ### 2.Before running :

@@ -24,7 +24,7 @@ def add_user():
    
     os.mkdir(source)
 
-    for i in range(3):
+    for i in range(5):
         audio = pyaudio.PyAudio()
 
         if i == 0:
@@ -91,8 +91,8 @@ def add_user():
             features = np.vstack((features, vector))
             
         # when features of 3 files of speaker are concatenated, then do model training
-        if count == 3:    
-            gmm = GMM(n_components = 16, n_iter = 200, covariance_type='diag',n_init = 3)
+        if count == 5:    
+            gmm = GMM(n_components = 16, n_iter = 200, covariance_type='diag',n_init = 5)
             gmm.fit(features)
 
             # saving the trained gaussian model

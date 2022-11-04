@@ -3,6 +3,7 @@ from IPython.display import Audio, display, clear_output
 import wave
 from scipy.io.wavfile import read
 import sys
+from sklearn import mixture
 from sklearn.mixture import GMM 
 from sklearn import preprocessing
 import python_speech_features as mfcc
