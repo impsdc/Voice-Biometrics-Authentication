@@ -7,6 +7,8 @@ from sklearn import mixture
 from sklearn.mixture import GMM 
 from sklearn import preprocessing
 import python_speech_features as mfcc
+from sklearn.linear_model import LogisticRegression
+from sklearn import preprocessing
 import warnings
 warnings.filterwarnings("ignore")
 import numpy as np

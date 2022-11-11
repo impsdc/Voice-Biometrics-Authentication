@@ -11,20 +11,22 @@ from main_functions import *
 
 def add_user():
     
-    name = input("Enter Name:")
+    new_name = input("Enter Name:")
     
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
     CHUNK = 1024
     RECORD_SECONDS = 3
+
+    VOICEPATH = "./voice_database/"
     
-    source = "./voice_database/" + name
+    source = VOICEPATH + new_name
     
    
     os.mkdir(source)
 
-    for i in range(5):
+    for i in range(3):
         audio = pyaudio.PyAudio()
 
         if i == 0:
@@ -70,38 +72,37 @@ def add_user():
         waveFile.writeframes(b''.join(frames))
         waveFile.close()
         print("Done")
+    
+    voice_dir = [ name for name in os.listdir(VOICEPATH) if os.path.isdir(os.path.join(VOICEPATH, name)) ]
+    X = []
+    Y = []
+    for name in voice_dir:
+        source = f"{VOICEPATH}{name}"
+        for path in os.listdir(source):
+                path = os.path.join(source, path)
 
-    dest =  "./gmm_models/"
-    count = 1
+                # reading audio files of speaker
+                (sr, audio) = read(path)
+                
+                # extract 40 dimensional MFCC
+                vector = extract_features(audio,sr)
+                vector = vector.flatten()
+                X.append(vector)
+                Y.append(name)
+    X = np.array(X, dtype=object)
 
-    for path in os.listdir(source):
-        path = os.path.join(source, path)
+    le = preprocessing.LabelEncoder()
+    le.fit(Y)
+    Y_trans = le.transform(Y)
+    clf = LogisticRegression(random_state=0).fit(X.tolist(), Y_trans)
 
-        features = np.array([])
-        
-        # reading audio files of speaker
-        (sr, audio) = read(path)
-        
-        # extract 40 dimensional MFCC & delta MFCC features
-        vector   = extract_features(audio,sr)
 
-        if features.size == 0:
-            features = vector
-        else:
-            features = np.vstack((features, vector))
-            
-        # when features of 3 files of speaker are concatenated, then do model training
-        if count == 5:    
-            gmm = GMM(n_components = 16, n_iter = 200, covariance_type='diag',n_init = 5)
-            gmm.fit(features)
-
-            # saving the trained gaussian model
-            pickle.dump(gmm, open(dest + name + '.gmm', 'wb'))
-            print(name + ' added successfully') 
-            
-            features = np.asarray(())
-            count = 0
-        count = count + 1
-
+    if os.path.isfile("gmm_models/voice_auth.gmm"): 
+        os.remove("gmm_models/voice_auth.gmm")
+    # saving model
+    pickle.dump(clf, open('gmm_models/voice_auth.gmm', 'wb'))
+    print(new_name + ' added successfully') 
+    
+    features = np.asarray(())
 if __name__ == '__main__':
     add_user()

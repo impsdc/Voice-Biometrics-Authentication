@@ -5,3 +5,4 @@ voice_database/*
 !voice_database/unknown/
 gmm_models/*
 !gmm_models/unknown.gmm
+database_voice_saved/
